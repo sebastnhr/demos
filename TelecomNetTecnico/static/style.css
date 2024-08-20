@@ -1,0 +1,240 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    background-image: url("./generic_wallpaper_telecomnet.jpg");
+    background-repeat: round;
+}
+
+#chat-container {
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+#chat-messages {
+    height: 700px;
+    overflow-y: auto;
+    padding: 20px;
+    position: relative;
+}
+
+#input-container {
+    display: flex;
+    border-top: 1px solid #e0e0e0;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+}
+
+#send-btn, #auto-btn {
+    padding: 10px 20px;
+    background-color: #0363ad;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#send-btn:hover, #auto-btn:hover {
+    opacity: 0.7;
+}
+
+#send-btn:disabled, #auto-btn:disabled {
+    background: #195162;
+    opacity: 1 !important;
+    cursor: auto;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.user-message {
+    background-color: #1ca0c7;
+    color: white;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.user-message img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.bot-message {
+    background-color: #91d8ca;
+    color: black;
+    align-self: flex-start;
+}
+
+.error{
+    background-color: #f06b4c;
+    color: white;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;  
+    background-color: #0a8165;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    position: absolute; top: 10px; left: 10px;
+}
+
+.button:hover {
+    opacity: 0.7;
+}
+/* input */
+.inputfile{
+    display: none;
+}
+.inputfile + label {
+    color: #045aa3;
+}
+
+.inputfile:focus + label,
+.inputfile.has-focus + label,
+.inputfile + label:hover {
+    opacity: 0.7;
+}
+
+label i {
+    font-size: 24px;
+    padding: 5px;
+}
+
+
+/* Tooltip styles */
+.file-input {
+    position: relative;
+}
+
+.tooltip {
+    visibility: hidden;
+    width: auto;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.file-input:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/*airplane loader*/
+.loader {
+    transform: rotateZ(45deg);
+    perspective: 1000px;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    color: #91d8ca;  
+    display: block;
+    position: absolute;
+}
+
+.loader.left{ left: 20px; }
+.loader.right{ right: 20px; }
+
+.loader:before,
+.loader:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    border-radius: 50%;
+    transform: rotateX(70deg);
+    animation: 1s spin linear infinite;
+}
+
+.loader:after {
+    color: #1ca0c7;
+    transform: rotateY(70deg);
+    animation-delay: .4s;
+}
+
+@keyframes rotate {
+    0% {
+        transform: translate(-50%, -50%) rotateZ(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotateZ(360deg);
+    }
+}
+
+@keyframes rotateccw {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(-360deg);
+    }
+}
+
+@keyframes spin {
+
+    0%,
+    100% {
+        box-shadow: .2em 0px 0 0px currentcolor;
+    }
+
+    12% {
+        box-shadow: .2em .2em 0 0 currentcolor;
+    }
+
+    25% {
+        box-shadow: 0 .2em 0 0px currentcolor;
+    }
+
+    37% {
+        box-shadow: -.2em .2em 0 0 currentcolor;
+    }
+
+    50% {
+        box-shadow: -.2em 0 0 0 currentcolor;
+    }
+
+    62% {
+        box-shadow: -.2em -.2em 0 0 currentcolor;
+    }
+
+    75% {
+        box-shadow: 0px -.2em 0 0 currentcolor;
+    }
+
+    87% {
+        box-shadow: .2em -.2em 0 0 currentcolor;
+    }
+}

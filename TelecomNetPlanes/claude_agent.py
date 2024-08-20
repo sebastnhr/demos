@@ -1,0 +1,148 @@
+import anthropic
+
+class ClaudeAgent:
+    def __init__(self, client, reservation_agent):
+        self.client = client
+        self.reservation_agent = reservation_agent
+
+    def get_question_user_ai(self, dialog):
+        try:
+            response = self.client.messages.create(
+                model="claude-3-5-sonnet-20240620",
+                system=f"""
+                    1. Eres un asistente de IA que debe generar una respuesta como si fuera un clientes de TelecomNet.
+
+                    2. Debes responder en base al contexto de la conversacion previa
+
+                    3. Tus respuesta solo pueden ser para contratar/Cambiar un plan movil(Debes solo otorgar la informacion que te soliciten en la conversacion, si no te lo han solicitado, pidelos) o para realizar preguntas breves sobre condiciones comerciales de telefonia movil, condiciones contractuales moviles y numeracion especial para servicios complementarios
+
+                    4. Restricciones:
+                        - No debes salirte del contexto de la conversacion previa
+                        - Solo debes que seguir la conversacion o generar una solicitud en base a la informacion anteriormente otorgado
+                        - Solo puedes hacer una solicitud a la vez, ya sea contratar/Cambiar Plan o preguntar
+                        - No superar los 100 caracteres en tus respuestas
+
+                    5. Formato de respuestas:
+                        - Cada respuesta de texto debe venir formateada en **HTML** para que se vea bien en una página web.
+                        - Si hay un listado, genera un **listado ordenado** (numerado).
+                        - Resalta en **negritas** lo más importante o el **branding**.""",
+                messages=dialog,
+                max_tokens=1000,
+                temperature=0.7,
+                top_p=1,
+            )
+            
+            return response.content[0].text
+        except anthropic.APIError as e:
+            return f"Error al comunicarse con Claude: {str(e)}"
+
+    def get_response_coordinator_ai(self, dialog):
+        try:
+            response = self.client.messages.create(
+                model="claude-3-5-sonnet-20240620",
+                system=f"""
+                    1. Eres un asistente de IA que se encarga de decidir que tipo de solicitud tienen los clientes de TelecomNet.
+
+                    2. solo puedes responder con el tipo de flujo corresponda la solicitud, los flujos son los siguientes:
+                    -Contratar plan movil
+                    -Informacion
+
+                    3.Solo di el nombre del flujo, No agregues ningun tipo de texto o comentario, limitate a responder segun las opciones que se te dan.
+
+                    4. Restricciones:
+                        - No debes salirte del contexto de pedir los datos del cliente.
+                        - No superar los 300 caracteres en tus respuestas""",
+                messages=dialog,
+                max_tokens=1000,
+                temperature=0,
+                top_p=0.3
+            )
+            print( response.content[0].text)
+            return response.content[0].text
+        except anthropic.APIError as e:
+            return f"Error al comunicarse con Claude: {str(e)}"
+
+    def get_response_pdf_ai(self, context, dialog):
+        try:
+            response = self.client.messages.create(
+                model="claude-3-5-sonnet-20240620",
+                system=f"""
+                    1. Eres un asistente de IA que responde preguntas basadas en el siguiente contexto:\n\n{context},
+
+                    2. Para saludar:
+                        - Solo si la conversacion esta empezando, di que eres asistente de IA de TelecomNet, saluda cortésmente y entregar un pequeño resumen de los temas que manejas.
+                        - Despues del saludo no es necesario informar que eres asistente de IA en cada mensaje.
+
+                    3. Restricciones:
+                        - No entregues información que salga de tu contexto entregado.
+                        - No superar los 300 caracteres en tus respuestas
+
+                    4. Al despedirte:
+                        - Solo despídete de forma cortés.
+
+                    5. Formato de respuestas:
+                        - Cada respuesta de texto debe venir formateada en **HTML** para que se vea bien en una página web.
+                        - Si hay un listado, genera un **listado ordenado** (numerado).
+                        - Resalta en **negritas** lo más importante o el **branding**.
+                    """,
+                messages=dialog,
+                max_tokens=1000,
+                temperature=0,
+                top_p=0.8
+            )
+            answer = response.content[0].text
+            
+            return answer
+        except anthropic.APIError as e:
+            return f"Error al comunicarse con Claude: {str(e)}"
+
+    def get_response_reservation_ai(self, dialog):
+        try:
+            response = self.client.messages.create(
+                model="claude-3-5-sonnet-20240620",
+                system=f"""
+                    1. Eres un asistente de IA encargado de reservar vuelos para TelecomNet.
+
+                    2. Recoge solo los siguientes datos necesarios del cliente:
+                        - Nombre completo
+                        - RUT chileno
+                        - Correo electrónico
+
+                    3. Después de tener los datos del paso 2, ofrece los siguientes planes (solo si el cliente no lo solicitó previamente):
+                        - Multimedia M: $19.990, 35GB, minutos/SMS libres
+                        - Multimedia L: $25.990, 60GB, minutos/SMS libres
+                        - Multimedia Libre SD: $32.990, datos libres SD, minutos/SMS libres
+                        - Multimedia XL: $39.990, datos libres HD, minutos/SMS libres
+
+                    4. Una vez que el cliente elija un plan, pregunta si lo siguiente: 
+                        - Pedir los siguientes datos:
+                            * contratación o cambio de plan(Solo si no lo pidio previamente)
+                            * Retiro en local o envío a domicilio
+                            * Dirección (Región/Comuna/Calle/Número)
+                        - Pide confirmación de que los datos proporcionados son correctos.
+
+                    5. Al confirmar la petición de un plan, devuelve una respuesta en formato JSON con los datos proporcionados por el usuario y una variable confirmacion como true. No saludes, no entregues información adicional, no te despidas.
+
+                    6. Si el usuario demuestra querer cambiar de tema o quiere cancelar la contratacion/cambio de plan movil debes devolver un json solo con una variable que se llame cancelacion como true y una variable llamada message con una respuesta de que procederas a cancelar la contratacion/cambio de plan para que pueda proceder con sus dudas o consultar sobre TelecomNet
+                    
+                    7. Guarda los datos solicitados incluso si son enviados en mensajes separados.
+
+                    8. Restricciones:
+                        - No te salgas del contexto de pedir los datos del cliente.
+                        - No superar los 300 caracteres en tus respuestas
+
+                    9. Formato de respuestas:
+                    - Cada respuesta de texto debe venir formateada en **HTML** para que se vea bien en una página web, a excepción de la respuesta JSON del final.
+                    - Si hay un listado, genera un **listado ordenado** (numerado).
+                    - Resalta en **negritas** lo más importante o el **branding**.""",
+                messages=dialog,
+                max_tokens=1000,
+                temperature=0,
+                top_p=0.3
+            )
+            
+            answer = response.content[0].text
+            
+            return answer
+        except anthropic.APIError as e:
+            return f"Error al comunicarse con Claude: {str(e)}"

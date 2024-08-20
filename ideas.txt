@@ -1,0 +1,13 @@
+- Marcas genericas DONE
+- Cancelar el flujo del momento DONE
+- Nivel de gestion de formulario
+- Resivir formulario mediante IA
+- Gestion multidemo DONE
+- autodemostracion mediante IA DONE
+- Arreglar IA usuario
+- mensaje de saludo
+- bloquear boton
+
+Telecom:
+- Reagendamiento de tecnico(Usar una tabla con horario)
+- Opcion para interaccion con tecnico
