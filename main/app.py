@@ -22,6 +22,11 @@ def TelecomNetAgendamiento():
 def TelecomNetTecnico():
     return redirect('http://localhost:5004')
 
+@app.route('/GasComunal')
+def GasComunal():
+    return redirect('http://localhost:5005')
+
+
 
 if __name__ == '__main__':
     app.run(port=5000)

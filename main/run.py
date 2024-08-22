@@ -11,7 +11,8 @@ if __name__ == "__main__":
         "python ./Aeroconnect/main.py",
         "python ./TelecomNetPlanes/main.py",
         "python ./TelecomNetAgendamiento/main.py",
-        "python ./TelecomNetTecnico/main.py"
+        "python ./TelecomNetTecnico/main.py",
+        "python ./GasComunal/main.py"
     ]
 
     threads = []

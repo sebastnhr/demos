@@ -52,10 +52,10 @@ h1 {
     background-color: #0056b3;
 }
 
-.demos{
-    width: 1000px;
+.demos{  
+    width: 1250px;
     justify-content: space-around;
-    max-width: 1000px;
+    max-width: 1250px;
     display: flex;
     flex-wrap: wrap;
     gap: 10px 20px;
@@ -114,6 +114,10 @@ h1 {
 
 .image.voicechat{
     background-image: url("./generic_wallpaper_voicechat.jpg");
+}
+
+.image.gascomunal{
+    background-image: url("./generic_wallpaper_gascomunal.jpg");
 }
 
 .overlay {
